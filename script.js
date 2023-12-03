@@ -135,6 +135,7 @@ const calculateScore=(submission,assignment,latePenalty)=>{
     if (assignment) {
       const late = isLate(submission.submission.submitted_at, assignment.due_at);
       const finalScore = calculateScore(submission.submission, assignment, late);
+      //do not round it because every final score will 1
         console.log(`Learner ID: ${submission.learner_id}, Assignment: ${assignment.name}, Final Score is: ${finalScore}`);
     }
   });
