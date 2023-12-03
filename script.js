@@ -100,17 +100,44 @@ const CourseInfo = {
     return submittedDate > dueDate
 
   }
-  const logSubmissionsForLearner = (learnerId) => {
+
+const calculateScore=(submission,assignment,latePenalty)=>{
+    const maxScore = assignment.points_possible;
+    let score = submission.score;
+    if(latePenalty){
+        score = Math.max(score -maxScore* 0.1,0)
+    }
+
+    return score/maxScore
+  }
+  
+  const learnerEachSubmission = (learnerId) => {
     LearnerSubmissions.forEach(submission => {
       if (submission.learner_id === learnerId) {
+        /** find method returns the value of the first element in the array where predicate is true, and undefined otherwise.
+         * find calls predicate once for each element of the array, in ascending order, 
+         * until it finds one where predicate returns true. If such an element is found, 
+         * find immediately returns that element value. Otherwise, find returns undefined. */
         const assignment = AssignmentGroup.assignments.find(assignment => assignment.id === submission.assignment_id);
-  
+
         if (assignment) {
           const late = isLate(submission.submission.submitted_at,assignment.due_at);
           console.log(`Assignment: ${assignment.name}, Submitted At: ${submission.submission.submitted_at}, Due At: ${assignment.due_at}, Late: ${late}`);
         }
       }
+
+    
     });
   };
+  LearnerSubmissions.forEach(submission => {
+    const assignment = AssignmentGroup.assignments.find(a => a.id === submission.assignment_id);
   
-  logSubmissionsForLearner(132);
+    if (assignment) {
+      const late = isLate(submission.submission.submitted_at, assignment.due_at);
+      const finalScore = calculateScore(submission.submission, assignment, late);
+        console.log(`Learner ID: ${submission.learner_id}, Assignment: ${assignment.name}, Final Score is: ${finalScore}`);
+    }
+  });
+//   learnerEachSubmission(125);
+//   learnerEachSubmission(132);
+
