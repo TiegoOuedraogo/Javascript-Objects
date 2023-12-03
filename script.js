@@ -110,6 +110,13 @@ const calculateScore=(submission,assignment,latePenalty)=>{
 
     return score/maxScore
   }
+
+  const validateCourseAssignment=( course, ag)=>{
+    if(course.id !== ag.course.id){
+        throw new Error("Wrong Assignment group");
+    }
+    console.error.log("validation passed")
+  } 
   
   const learnerEachSubmission = (learnerId) => {
     LearnerSubmissions.forEach(submission => {
@@ -139,6 +146,13 @@ const calculateScore=(submission,assignment,latePenalty)=>{
         console.log(`Learner ID: ${submission.learner_id}, Assignment: ${assignment.name}, Final Score is: ${finalScore}`);
     }
   });
+
+  try {
+    validateCourseAssignment(CourseInfo, AssignmentGroup);
+} catch (error) {
+    console.error(error.message);
+}
+
 //   learnerEachSubmission(125);
 //   learnerEachSubmission(132);
 
