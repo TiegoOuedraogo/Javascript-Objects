@@ -120,25 +120,25 @@ const validateCourseAssignment = (course, assignmentsGrp) => {
 function getLearnerData(course, assignmentsGrp, stdSubmission) {
   validateCourseAssignment(course, assignmentsGrp);
 
-  const learners = stdSubmission.reduce((acc, submission) => {
+  const learners = stdSubmission.reduce((acc, eachSubmission) => {
     const assignment = assignmentsGrp.assignments.find(
-      (element) => element.id === submission.assignment_id
+      (element) => element.id === eachSubmission.assignment_id
     );
     if (assignment && new Date() >= new Date(assignment.due_at)) {
-      const learnerId = submission.learner_id;
+      const learnerId = eachSubmission.learner_id;
       if (!acc[learnerId]) {
         acc[learnerId] = { id: learnerId, finalScore: 0, totalWeight: 0 };
       }
 
       const late = isLate(
-        submission.submission.submitted_at,
+        eachSubmission.submission.submitted_at,
         assignment.due_at
       );
-      const adjustedScore = calculateScore(submission.submission, assignment, late) * assignmentsGrp.group_weight;
+      const adjustedScore = calculateScore(eachSubmission.submission, assignment, late) * assignmentsGrp.group_weight;
       console.log(
         `The Learner with ID: ${learnerId}, ` +
         `Assignment ID: ${assignment.id}, ` +
-        `Was Submitted At: ${submission.submission.submitted_at},\r ` +
+        `Was Submitted At: ${eachSubmission.submission.submitted_at},\r ` +
         `The Due At is: ${assignment.due_at},` +
         `The Late is: ${late},` +
         `Penalty Applied: ${late ? '\vYes' : '\fNo'}`
